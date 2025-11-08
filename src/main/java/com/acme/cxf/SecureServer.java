@@ -37,12 +37,23 @@ public class SecureServer {
         System.out.println("Secure WSDL: http://localhost:8080/services/hello-secure?wsdl");
         System.out.println("Server started. Press Ctrl+C to stop.");
 
+        // Add shutdown hook for graceful shutdown
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("\nShutting down secure server...");
+            if (server != null) {
+                server.stop();
+            }
+        }));
+
         // Keep server running
         try {
             Thread.sleep(Long.MAX_VALUE);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             System.out.println("Server stopping...");
+            if (server != null) {
+                server.stop();
+            }
         }
 
     }
